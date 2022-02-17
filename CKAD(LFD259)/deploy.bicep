@@ -107,6 +107,10 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
   }
 }
 
+/*
+  Creates SSH keypair for the VM's and stores the values in a KeyVault for use.
+  Authorized using the above managed identity
+*/
 module createSshKeys '../bicep/add-or-get-kv-sshkey.bicep' = {
   name: 'createSshKeypair'
   dependsOn: [
@@ -126,7 +130,7 @@ module createSshKeys '../bicep/add-or-get-kv-sshkey.bicep' = {
 module createMasterNode './k8s-vm.bicep' = {
   name: 'createMasterNode'
   dependsOn: [
-    keyVault //! Bicep will compolain this isn't needed. It is for the getSecret method below.
+    keyVault //! Bicep will complain this isn't needed. It is for the getSecret method below.
     createSshKeys
   ]
   params: {
@@ -148,7 +152,7 @@ module createMasterNode './k8s-vm.bicep' = {
 module createWorkerNode './k8s-vm.bicep' = {
   name: 'createWorkerNode'
   dependsOn: [
-    keyVault //! Bicep will compolain this isn't needed. It is for the getSecret method below.
+    keyVault //! Bicep will complain this isn't needed. It is for the getSecret method below.
     createSshKeys
   ]
   params: {
